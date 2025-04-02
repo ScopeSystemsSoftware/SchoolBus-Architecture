@@ -1,0 +1,86 @@
+name: Create SchoolBus Platform Repositories
+
+on:
+  workflow_dispatch:
+    inputs:
+      organization:
+        description: 'GitHub organization name'
+        required: true
+        default: 'ScopeSystemsSoftware'
+      visibility:
+        description: 'Repository visibility (private/public)'
+        required: true
+        default: 'private'
+        type: choice
+        options:
+          - private
+          - public
+
+jobs:
+  create-repositories:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create repositories
+        env:
+          GH_TOKEN: ${{ secrets.REPOSITORY_CREATION_TOKEN }}
+          ORG_NAME: ${{ github.event.inputs.organization }}
+          VISIBILITY: ${{ github.event.inputs.visibility }}
+        run: |
+          # Funcție pentru crearea repo-urilor
+          create_repo() {
+            local repo_name="$1"
+            local description="$2"
+            
+            echo "Creating repository: $repo_name"
+            
+            # Utilizarea GitHub CLI pentru a crea repository-ul
+            gh repo create "$ORG_NAME/$repo_name" --$VISIBILITY -d "$description" --confirm
+            
+            # Verificăm dacă repo-ul a fost creat
+            if [ $? -eq 0 ]; then
+              echo "Successfully created $repo_name"
+            else
+              echo "Failed to create $repo_name"
+            fi
+          }
+          
+          # Repository principal
+          create_repo "schoolbus-platform" "Repository central pentru platforma School Bus - arhitectură, documentație și configurații globale"
+          
+          # Microservicii (backend)
+          create_repo "schoolbus-svc-routing" "Serviciu pentru rutare și optimizare trasee"
+          create_repo "schoolbus-svc-tracking" "Serviciu pentru tracking în timp real"
+          create_repo "schoolbus-svc-auth" "Serviciu pentru autentificare și autorizare"
+          create_repo "schoolbus-svc-notifications" "Serviciu pentru notificări"
+          create_repo "schoolbus-svc-users" "Serviciu pentru management utilizatori"
+          create_repo "schoolbus-svc-scheduling" "Serviciu pentru programare și planificare"
+          create_repo "schoolbus-svc-analytics" "Serviciu pentru analiză și raportare"
+          create_repo "schoolbus-svc-fleet" "Serviciu pentru managementul flotei"
+          create_repo "schoolbus-svc-geo" "Serviciu pentru geolocalizare"
+          
+          # Aplicații frontend
+          create_repo "schoolbus-app-admin-web" "Aplicație web pentru administratori"
+          create_repo "schoolbus-app-dispatch-web" "Aplicație web pentru dispeceri"
+          create_repo "schoolbus-app-fleet-web" "Aplicație web pentru managementul flotei"
+          create_repo "schoolbus-app-parent-web" "Aplicație web pentru părinți"
+          create_repo "schoolbus-app-driver-mobile" "Aplicație mobilă pentru șoferi"
+          create_repo "schoolbus-app-parent-mobile" "Aplicație mobilă pentru părinți"
+          create_repo "schoolbus-app-monitor-mobile" "Aplicație mobilă pentru monitorizare"
+          
+          # Infrastructură și DevOps
+          create_repo "schoolbus-infra-gke" "Infrastructură Google Kubernetes Engine"
+          create_repo "schoolbus-infra-terraform" "Configurații Terraform pentru toate componentele"
+          create_repo "schoolbus-devops-ci" "Pipeline-uri CI/CD"
+          create_repo "schoolbus-devops-monitoring" "Monitoring, alerting și observabilitate"
+          
+          # Componente comune și biblioteci
+          create_repo "schoolbus-lib-common" "Biblioteci și componente reutilizabile"
+          create_repo "schoolbus-lib-api-specs" "Specificații API (OpenAPI/Swagger)"
+          create_repo "schoolbus-lib-ui-components" "Componente UI comune pentru aplicațiile web/mobile"
+          
+          # Instrumente și utilități
+          create_repo "schoolbus-tools-data-migration" "Instrumente pentru migrarea datelor"
+          create_repo "schoolbus-tools-dev-environment" "Configurații pentru medii de dezvoltare" 

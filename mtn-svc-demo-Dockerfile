@@ -1,0 +1,27 @@
+FROM node:18-alpine
+
+# Creare director de lucru
+WORKDIR /usr/src/app
+
+# Copiere package.json și package-lock.json
+COPY package*.json ./
+
+# Instalare dependențe
+RUN npm ci --only=production
+
+# Copiere cod sursă
+COPY . .
+
+# Variabile de mediu
+ENV NODE_ENV=production
+ENV PORT=8080
+
+# Expunere port
+EXPOSE 8080
+
+# Verificare sănătate
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget -qO- http://localhost:8080/health/liveness || exit 1
+
+# Pornire aplicație
+CMD ["node", "src/index.js"] 

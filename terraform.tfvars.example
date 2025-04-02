@@ -1,0 +1,29 @@
+# Exemplu de configurație terraform.tfvars pentru infrastructura multi-tenant multi-cloud
+
+# Configurare GCP
+gcp_project_id = "your-project-id"
+gcp_region     = "us-central1"
+gke_node_count = 3
+gke_machine_type = "e2-standard-2"
+
+# Configurare DigitalOcean
+do_token       = "your-digitalocean-api-token"
+do_region      = "fra1"
+vps_node_count = 2
+vps_node_size  = "s-2vcpu-4gb"
+
+# Configurare Bare-Metal
+baremetal_server_ip = "192.168.1.100"
+ssh_key_path = "~/.ssh/id_rsa"
+
+# Configurare multi-tenant
+enable_tenant_isolation = true
+
+# Configurare backup
+enable_backup = true
+backup_schedule = "0 2 * * *"
+backup_retention_days = 30
+
+# Configurare monitorizare
+enable_monitoring = true
+enable_tracing = true 

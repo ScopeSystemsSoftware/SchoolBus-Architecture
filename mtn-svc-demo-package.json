@@ -1,0 +1,39 @@
+{
+  "name": "schoolbus-mtn-svc-demo",
+  "version": "1.0.0",
+  "description": "Multi-tenant demo service for SchoolBus platform",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-openapi-validator": "^5.0.4",
+    "helmet": "^6.1.5",
+    "jaeger-client": "^3.19.0",
+    "mongoose": "^7.1.0",
+    "morgan": "^1.10.0",
+    "openapi-types": "^12.1.0",
+    "pino": "^8.11.0",
+    "pino-http": "^8.3.3",
+    "pino-pretty": "^10.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 

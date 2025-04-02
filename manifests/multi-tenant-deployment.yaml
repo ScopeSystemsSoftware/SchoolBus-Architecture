@@ -1,0 +1,281 @@
+###################################
+# Manifest exemplu pentru aplicația SchoolBus în multi-tenant
+###################################
+
+---
+# Deployment pentru API Gateway
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: tenant-tenanta
+  labels:
+    app: api-gateway
+    tenant: tenanta
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-gateway
+      tenant: tenanta
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+        tenant: tenanta
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+      - name: api-gateway
+        image: schoolbus/api-gateway:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: TENANT_ID
+          value: "tenanta"
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production,tenant-tenanta"
+        # Liveness și Readiness Probes
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
+
+---
+# Service pentru API Gateway
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: tenant-tenanta
+  labels:
+    app: api-gateway
+    tenant: tenanta
+spec:
+  selector:
+    app: api-gateway
+    tenant: tenanta
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+  type: ClusterIP
+
+---
+# Horizontal Pod Autoscaler pentru API Gateway
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-gateway-hpa
+  namespace: tenant-tenanta
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gateway
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+# Destination Rule pentru API Gateway
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: api-gateway-circuit-breaker
+  namespace: tenant-tenanta
+spec:
+  host: api-gateway
+  trafficPolicy:
+    connectionPool:
+      http:
+        http1MaxPendingRequests: 100
+        maxRequestsPerConnection: 10
+      tcp:
+        maxConnections: 100
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 60s
+
+---
+# ConfigMap pentru configurare specifică tenant
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tenant-config
+  namespace: tenant-tenanta
+data:
+  tenant-id: "tenanta"
+  tenant-name: "Școala Nr. 1"
+  tenant-color: "#1976d2"
+  tenant-config.json: |
+    {
+      "branding": {
+        "primaryColor": "#1976d2",
+        "logoUrl": "https://storage.googleapis.com/schoolbus-tenants/tenanta/logo.png",
+        "appName": "SchoolBus - Școala Nr. 1"
+      },
+      "features": {
+        "studentTracking": true,
+        "parentNotifications": true,
+        "routeOptimization": true,
+        "attendanceSystem": true
+      },
+      "limits": {
+        "maxBuses": 20,
+        "maxRoutes": 30,
+        "maxUsers": 2000
+      }
+    }
+
+---
+# Deployment pentru Frontend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: tenant-tenanta
+  labels:
+    app: frontend
+    tenant: tenanta
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+      tenant: tenanta
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tenant: tenanta
+    spec:
+      containers:
+      - name: frontend
+        image: schoolbus/frontend:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: TENANT_ID
+          value: "tenanta"
+        - name: REACT_APP_TENANT_ID
+          value: "tenanta"
+        - name: REACT_APP_API_URL
+          value: "http://api-gateway:8080"
+        volumeMounts:
+        - name: tenant-config-volume
+          mountPath: /usr/share/nginx/html/config
+      volumes:
+      - name: tenant-config-volume
+        configMap:
+          name: tenant-config
+
+---
+# Service pentru Frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: tenant-tenanta
+  labels:
+    app: frontend
+    tenant: tenanta
+spec:
+  selector:
+    app: frontend
+    tenant: tenanta
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  type: ClusterIP
+
+---
+# NetworkPolicy pentru izolare tenant
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tenant-isolation
+  namespace: tenant-tenanta
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          tenant: tenanta
+    - namespaceSelector:
+        matchLabels:
+          istio-injection: enabled
+      podSelector:
+        matchLabels:
+          app: istio-ingressgateway
+
+---
+# ResourceQuota pentru tenant
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: tenant-quota
+  namespace: tenant-tenanta
+spec:
+  hard:
+    requests.cpu: "2"
+    requests.memory: 4Gi
+    limits.cpu: "4"
+    limits.memory: 8Gi
+    pods: "20"
+    services: "10"
+
+---
+# LimitRange pentru tenant
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: tenant-limitrange
+  namespace: tenant-tenanta
+spec:
+  limits:
+  - default:
+      memory: 256Mi
+      cpu: 200m
+    defaultRequest:
+      memory: 128Mi
+      cpu: 100m
+    type: Container 

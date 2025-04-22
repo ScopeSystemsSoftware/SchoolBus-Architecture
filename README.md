@@ -50,6 +50,7 @@ We're tracking the overall architecture implementation status here. For detailed
 - [SchoolBus-GCP-Architecture.md](SchoolBus-GCP-Architecture.md): Comprehensive GCP-focused architecture document
 - [SchoolBus-Developer-Guide.md](SchoolBus-Developer-Guide.md): Guide for developers implementing microservices
 - [SchoolBus-Complete-Architecture.md](SchoolBus-Complete-Architecture.md): Original multi-tenant multi-cloud architecture (for reference only)
+- [SchoolBus-API-Gateway-Microservices-Guide.md](SchoolBus-API-Gateway-Microservices-Guide.md): Detailed guide for API Gateway and Microservices implementation
 
 ## Reference Implementation
 
@@ -73,6 +74,7 @@ For the complete implementation details, please refer to:
 
 - [Google Cloud Architecture](SchoolBus-GCP-Architecture.md): Full architecture specification for GCP implementation
 - [Developer Guide](SchoolBus-Developer-Guide.md): Guidelines for implementing consistent microservices
+- [API Gateway & Microservices Guide](SchoolBus-API-Gateway-Microservices-Guide.md): Complete guide for implementing API Gateway with microservices
 
 ## Getting Started
 
@@ -96,4 +98,4 @@ The reference implementation in `src` demonstrates:
 
 1. Create separate repositories for each planned microservice
 2. Follow the architecture pattern demonstrated in the reference implementation
-3. Implement the frontend applications in separate repositories 
+3. Implement the frontend applications in separate repositories

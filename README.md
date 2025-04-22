@@ -1,60 +1,58 @@
-# SchoolBus Management System
+# SchoolBus School Microservice
 
-This repository contains the architecture documentation and reference implementation for the SchoolBus Management System platform.
+This repository contains the School Microservice for the SchoolBus Management Platform, designed to manage school data in a secure and scalable way.
 
-## Important Notice
+## Deployment Status & Progress Tracking
 
-> **Architectural Change**: We've moved to a simplified Google Cloud Platform (GCP) implementation instead of the initial multi-tenant multi-cloud approach. The current architecture is detailed in the [GCP Architecture Document](SchoolBus-GCP-Architecture.md).
+We're implementing the deployment following a phased approach. Below is our current progress:
 
-## Repository Contents
+### Phase 1: Prerequisites & Initial Setup
+- [ ] 1.1. Install required tools (Terraform, Google Cloud SDK)
+- [ ] 1.2. Configure Google Cloud project
+- [ ] 1.3. Enable required GCP APIs
+- [ ] 1.4. Set up Firebase project and authentication
+- [ ] 1.5. Create GCP service account for deployment
 
-- [SchoolBus-GCP-Architecture.md](SchoolBus-GCP-Architecture.md): Comprehensive GCP-focused architecture document
-- [SchoolBus-Developer-Guide.md](SchoolBus-Developer-Guide.md): Guide for developers implementing microservices
-- [SchoolBus-Complete-Architecture.md](SchoolBus-Complete-Architecture.md): Original multi-tenant multi-cloud architecture (for reference only)
+### Phase 2: Infrastructure Deployment
+- [ ] 2.1. Configure Terraform variables
+- [ ] 2.2. Initialize Terraform
+- [ ] 2.3. Run Terraform plan
+- [ ] 2.4. Apply Terraform configuration
+- [ ] 2.5. Verify infrastructure deployment
 
-## Reference Implementation
+### Phase 3: Application Deployment
+- [ ] 3.1. Build Docker image
+- [ ] 3.2. Push image to Google Container Registry
+- [ ] 3.3. Deploy application to GKE
+- [ ] 3.4. Configure Firebase authentication for the application
+- [ ] 3.5. Verify application deployment
 
-The `src` directory contains a **reference implementation** of the School Management microservice using:
-- **Backend**: NestJS with Firebase Auth integration
-- **Frontend**: React implementation
+### Phase 4: Testing & Validation
+- [ ] 4.1. Test health endpoint
+- [ ] 4.2. Test authentication
+- [ ] 4.3. Test CRUD operations
+- [ ] 4.4. Load testing (optional)
 
-This serves as a reference implementation and starting point for building the complete microservice architecture.
-
-## Microservice Architecture
-
-Our architecture follows a true microservice approach:
-
-- Each microservice will have its own dedicated repository
-- Frontend applications will also have separate repositories
-- This repository serves as the architectural reference and contains a sample implementation
-
-## Documentation
-
-For the complete implementation details, please refer to:
-
-- [Google Cloud Architecture](SchoolBus-GCP-Architecture.md): Full architecture specification for GCP implementation
-- [Developer Guide](SchoolBus-Developer-Guide.md): Guidelines for implementing consistent microservices
+### Phase 5: CI/CD Setup
+- [ ] 5.1. Configure GitHub Actions secrets
+- [ ] 5.2. Test CI pipeline
+- [ ] 5.3. Test CD pipeline
+- [ ] 5.4. Verify automatic deployment
 
 ## Getting Started
 
-To implement a new microservice, follow these steps:
-
-1. Review the [GCP Architecture Document](SchoolBus-GCP-Architecture.md)
-2. Follow the implementation patterns in the [Developer Guide](SchoolBus-Developer-Guide.md)
-3. Reference the sample implementation in the `src` directory
-
-## Sample Implementation Features
-
-The reference implementation in `src` demonstrates:
-
-- Firebase Authentication integration
-- Role-based authorization (admin, user roles)
-- School entity management with REST API
-- TypeORM with PostgreSQL database integration
-- Frontend React application with authentication
+For complete deployment instructions, please see the [DEPLOYMENT.md](DEPLOYMENT.md) document.
 
 ## Next Steps
 
-1. Create separate repositories for each planned microservice
-2. Follow the architecture pattern demonstrated in the reference implementation
-3. Implement the frontend applications in separate repositories 
+Our immediate next steps are:
+1. Complete Phase 1 setup (Prerequisites & Initial Setup)
+2. Configure basic Terraform files
+3. Start with infrastructure deployment
+
+## Additional Resources
+
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [Google Cloud Platform Documentation](https://cloud.google.com/docs)
+- [Firebase Authentication Documentation](https://firebase.google.com/docs/auth)
+- [TypeORM Documentation](https://typeorm.io/) 

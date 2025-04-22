@@ -194,21 +194,74 @@ Această arhitectură multi-tenant și multi-cloud oferă:
 - **Flexibilitate**: Posibilitatea de a rula diferite versiuni per tenant.
 - **Cost optimizat**: Alocare eficientă a resurselor.
 
-Pentru mai multe detalii, consultați documentația fiecărui modul. 
+Pentru mai multe detalii, consultați documentația fiecărui modul.
 
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   Feature   │──────►   Develop   │──────►    Main     │
-│  Branches   │      │   Branch    │      │   Branch    │
-└─────────────┘      └─────────────┘      └─────────────┘
-                            │                    │
-                            ▼                    ▼
-                     ┌─────────────┐      ┌─────────────┐
-                     │    Dev      │      │  Staging    │
-                     │ Environment │      │ Environment │
-                     └─────────────┘      └─────────────┘
-                                                │
-                                                ▼
-                                          ┌─────────────┐
-                                          │ Production  │
-                                          │ Environment │
-                                          └─────────────┘
+# SchoolBus POC
+
+This project is a Proof of Concept for the SchoolBus platform, demonstrating the integration between:
+
+- Apigee API Gateway
+- Firebase Authentication
+- NestJS Microservices
+
+## Project Structure
+
+- `/src/backend` - NestJS microservices backend
+- `/src/frontend` - React frontend application
+
+## Backend Features
+
+- NestJS microservices for Schools and Students
+- Firebase Auth integration
+- TypeORM with PostgreSQL
+- RBAC (Role-Based Access Control)
+
+## Frontend Features
+
+- React with TypeScript
+- Material UI components
+- Firebase Auth integration
+- Responsive design
+
+## Setup
+
+### Prerequisites
+
+- Node.js 16+
+- PostgreSQL
+- Firebase project credentials
+
+### Backend Setup
+
+```bash
+cd src/backend
+npm install
+npm run start:dev
+```
+
+### Frontend Setup
+
+```bash
+cd src/frontend
+npm install
+npm run dev
+```
+
+## API Documentation
+
+The API provides endpoints for managing schools and students:
+
+### Schools API
+- GET /api/schools - List all schools
+- GET /api/schools/:id - Get school details
+- POST /api/schools - Create a new school
+- PUT /api/schools/:id - Update a school
+- DELETE /api/schools/:id - Delete a school
+
+### Students API
+- GET /api/students - List all students
+- GET /api/students/:id - Get student details
+- GET /api/students/school/:schoolId - Get students by school
+- POST /api/students - Create a new student
+- PUT /api/students/:id - Update a student
+- DELETE /api/students/:id - Delete a student 

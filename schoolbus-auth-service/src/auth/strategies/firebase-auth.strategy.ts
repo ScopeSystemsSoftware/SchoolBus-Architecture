@@ -13,11 +13,11 @@ export class FirebaseAuthStrategy extends PassportStrategy(Strategy, 'firebase-a
     try {
       const user = await this.authService.validateToken(token);
       if (!user) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Invalid token or user not found');
       }
       return user;
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Authentication failed');
     }
   }
 } 
